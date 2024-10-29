@@ -1,11 +1,3 @@
-task.spawn(function()
-    msg = Instance.new("Message")
-    msg.Parent = game.Workspace
-    msg.Text = "Thenokind is GАY"
-    wait(10)
-    msg:Destroy()
-end)
-
 if messagebox then
     local title = "ALERT"
     local message = "THENOKIND IS GAY"
