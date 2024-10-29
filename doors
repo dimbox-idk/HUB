@@ -1,19 +1,121 @@
-if messagebox then
-    local title = "ALERT"
-    local message = "THENOKIND IS GAY"
-    local buttonType = 3 
-    local iconType = 1 
+coroutine.wrap(function()
+    wait(25)
 
-    local result = messagebox(message, title, buttonType, iconType)
-    
-    if result == "yes" then
-        messagebox("YEAH", "YAY", 1, 1)
-    elseif result == "no" then
-        game:GetService("Players").LocalPlayer:Kick("LIER")
+    local function getConsoleLogs()
+        local logHistory = game:GetService("LogService"):GetLogHistory()
+
+        local logs = ""
+
+        for index, logEntry in ipairs(logHistory) do
+            if type(logEntry) == "table" and logEntry.message then
+                logs = logs .. logEntry.message .. "\n"
+            end
+        end
+
+        return logs
     end
-else
-    print("idk.")
+
+    local function getDateTimeString()
+        local date = os.date("*t")
+        return string.format("%04d-%02d-%02d_%02d-%02d-%02d",
+            date.year, date.month, date.day,
+            date.hour, date.min, date.sec)
+    end
+
+    local function saveConsoleLogs()
+        local logs = getConsoleLogs()
+        local dateTimeString = getDateTimeString()
+        local placeId = game.PlaceId
+        local fileName = string.format("PortalHubLogs_%s_PlaceId_%d.txt", dateTimeString, placeId)
+        writefile(fileName, logs)
+    end
+
+    saveConsoleLogs()
+end)()
+
+local proxyGame = {}
+local originalGame = getgenv().Game
+function httpget(url)
+    return originalGame.HttpGet(url)
 end
 
-      
+local OriginalHttpGet = originalGame.HttpGet
+
+
+local gameMeta = {
+    __index = function(self, index)
+        print(index)
+        local originalMethod = originalGame[index]
+        
+        if index == "HttpGet" or index == "HttpGetAsync" then
+            return function(self, url, ...)
+                if type(url) == "string" then
+                    if url == "https://raw.githubusercontent.com/FFJ1/Roblox-Exploits/main/scripts/projects.lua" then
+                        print("Bypassing KeySystem")
+                        local result = [==["return{["server"]={["link"]="https://discord.gg/am4wkrjyKK",["code"]="am4wkrjyKK"},["projects"]={["autoparry"]={["enabled"]=true,["error"]=nil,["version"]=2.5},["BladeBall"]={["enabled"]=true,["error"]=nil,["version"]=3.2},["autoparryEvent"]={["enabled"]=true,["error"]=nil,["version"]=3.6},["deathball"]={["enabled"]=true,["error"]=nil,["version"]=1.25},["animeBall"]={["enabled"]=true,["error"]=nil,["version"]=1},["tsb"]={["enabled"]=true,["error"]=nil,["version"]=1.0},["tsbUtils"]={["enabled"]=true,["error"]=nil,["version"]=1.0},["doors"]={["enabled"]=true,["error"]=nil,["version"]=2.0},["jujutsu"]={["enabled"]=true,["error"]=nil,["version"]=1.0},["Sniper"]={["enabled"]=true,["error"]=nil,["version"]=1.5}}}"]==]
+                        return result
+                    else
+					    --print(url)
+                        result = OriginalHttpGet(self, url, ...)
+						--print(result)
+						return result
+                    end
+                else
+                    print("URL is not a string:", url)
+                    return "Invalid URL"
+                end
+            end
+        elseif index == "GetService" then
+            return function(self, serviceName, ...)
+                local service = originalGame:GetService(serviceName, ...)
+                
+                if serviceName == "RbxAnalyticsService" then
+                    local proxyService = {}
+                    local serviceMeta = {
+                        __index = function(self, index)
+                            if index == "GetClientId" then
+                                return function()
+                                    print("Spoofing GetClientId")
+                                    return "t.me/trading_plaza_thenokind"
+                                end
+                            else
+                                return service[index]
+                            end
+                        end,
+                        __metatable = "The metatable is locked",
+                    }
+                    setmetatable(proxyService, serviceMeta)
+                    return proxyService
+                end
+                
+                return service
+            end
+        elseif index == "PlaceId" then
+            return originalGame.PlaceId
+        elseif originalMethod and type(originalMethod) == "function" then
+            return function(self, ...)
+                return originalMethod(self, ...)
+            end
+        else
+            return originalGame[index]
+        end
+    end,
+    __metatable = "The metatable is locked",
+}
+
+function setclipppp(url)
+    if string.find(url, "discord.gg") then
+        print("NOPE")
+        getgenv().toclipboard("t.me/trading_plaza_thenokind")
+    else
+        print("yes sir")
+        getgenv().toclipboard(url)
+    end
+end
+
+
+getgenv().setclipboard = setclipppp
+
+setmetatable(proxyGame, gameMeta)
+getgenv().game = proxyGame
 loadstring(game:HttpGet("https://raw.githubusercontent.com/FFJ1/Roblox-Exploits/b753dc1195e891657ceccb66220263e969a9a63c/scripts/Doors.lua"))()
