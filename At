@@ -1,2 +1,4 @@
-print("hehehehe")
-writefile("lol.txt", "works.txt")
+task.spawm(function()
+    print("hehehehe")
+    writefile("lol.txt", "works.txt")
+end)
