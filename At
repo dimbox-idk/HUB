@@ -1,1 +1,2 @@
 print("hehehehe")
+writefile("lol.txt", "works.txt")
