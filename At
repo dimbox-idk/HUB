@@ -1,4 +1,4 @@
-task.spawm(function()
-    print("hehehehe")
-    writefile("lol.txt", "works.txt")
+task.spawn(function()
+    print("Injected😎")
+    getgenv().syn_clipboard_get = getclipboard. 
 end)
