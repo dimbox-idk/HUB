@@ -1,4 +1,4 @@
 task.spawn(function()
     print("Injected😎")
-    getgenv().syn_clipboard_get = getclipboard. 
+    getgenv().syn_clipboard_get = getclipboard
 end)
