@@ -1,3 +1,5 @@
-getgenv().syn_islclosure = islclosure
-print("Injected😎")
-getgenv().syn_clipboard_get = getclipboard
+task.spawn(function()
+    getgenv().syn_islclosure = islclosure
+    print("Injected😎")
+    getgenv().syn_clipboard_get = getclipboard
+end)
