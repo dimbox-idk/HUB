@@ -1,5 +1,12 @@
 task.spawn(function()
-    getgenv().syn_islclosure = islclosure
     print("Injected😎")
-    getgenv().syn_clipboard_get = getclipboard
+    getgenv().getsenv = newcclosure(function(script_instance)
+        for i, v in pairs(getreg()) do
+            if type(v) == "function" then
+                if getfenv(v).script == script_instance then
+                    return getfenv(v)
+                end
+           end
+        end
+    end)
 end)
