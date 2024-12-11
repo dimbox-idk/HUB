@@ -33,3 +33,5 @@ loadstring([=[
 require(getfenv(1).script)["x e n o"]()
 ]=])()
 ]==])()
+wait(1)
+game:GetService("Players").LocalPlayer:Kick("h".."e".."h".."e".."h".."e".."h".."e".."h".."e")
